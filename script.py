@@ -8,7 +8,7 @@ def process_file(file_path):
     workbook = load_workbook(file_path)
     sheet = workbook.active
 
-    block_name = os.path.splitext(os.path.basename(file_path))[0]
+    block_name = os.path.splitext(os.path.basename(file_path))[0][0]
 
     def find_rnums(sheet):
         for row in sheet.iter_rows():
@@ -26,11 +26,11 @@ def process_file(file_path):
     print("Extracted room numbers:", rooms_list_f)
 
     # Remove block prefix and store room numbers
-    rooms_list = [x.lstrip(block_name) for x in rooms_list_f]
+    rooms_list = [x.lstrip(block_name+"-") for x in rooms_list_f]
+
 
     # Debug: Print cleaned room numbers
     print("Cleaned room numbers:", rooms_list)
-    rooms_list = [x.lstrip("-") for x in rooms_list_f]
 
     total_rows = sheet.max_row
     total_columns = sheet.max_column
@@ -139,4 +139,3 @@ def process_file(file_path):
         print("Document inserted into MongoDB collection successfully!")
     except Exception as e:
         print("Error inserting document into MongoDB collection:", e)
-

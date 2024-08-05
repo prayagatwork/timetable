@@ -10,6 +10,15 @@ def process_file(file_path):
 
     block_name = os.path.splitext(os.path.basename(file_path))[0][0]
 
+    total_rows = sheet.max_row
+    total_columns = sheet.max_column
+    row = list(sheet.iter_rows(max_row=total_rows, max_col=total_columns))
+    
+    for row in sheet.iter_rows():
+        for cell in row:
+            if cell.value and str(cell.value).startswith(block_name):
+                cell.value = cell.value.replace(block_name, block_name + "-")
+    
     def find_rnums(sheet):
         for row in sheet.iter_rows():
             for cell in row:
@@ -28,19 +37,15 @@ def process_file(file_path):
     # Remove block prefix and store room numbers
     rooms_list = [x.lstrip(block_name+"-") for x in rooms_list_f]
 
-
     # Debug: Print cleaned room numbers
     print("Cleaned room numbers:", rooms_list)
 
-    total_rows = sheet.max_row
-    total_columns = sheet.max_column
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     rooms_schedule = {}  # Dictionary to store room schedules
 
     row_no = 0
     rooms_marker = 0
 
-    row = list(sheet.iter_rows(max_row=total_rows, max_col=total_columns))
     while row_no < total_rows:
         first_cell_value = row[row_no][0].value
         if first_cell_value and first_cell_value.lower() == "monday":

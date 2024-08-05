@@ -18,6 +18,7 @@ def process_file(file_path):
         for cell in row:
             if cell.value and str(cell.value).startswith(block_name):
                 cell.value = cell.value.replace(block_name, block_name + "-")
+    workbook.save(file_path)
     
     def find_rnums(sheet):
         for row in sheet.iter_rows():
